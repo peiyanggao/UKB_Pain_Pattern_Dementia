@@ -1,0 +1,43 @@
+# Genetic correlation analysis using LDSC
+library(GenomicSEM)
+
+# Reference files
+hm3_file <- "w_hm3.snplist"
+ld_ref <- "eur_w_ld_chr/"
+
+# GWAS summary statistics for exposure and outcome
+gwas_files <- c(
+  "Cluster_for_munge.txt",
+  "Outcome_for_munge.txt"
+)
+
+trait_names <- c("Cluster", "Outcome")
+
+# Munge GWAS summary statistics
+munge(
+  files = gwas_files,
+  hm3 = hm3_file,
+  trait.names = trait_names,
+  N = c(NA, NA),
+  info.filter = 0.8,
+  maf.filter = 0.01
+)
+
+# Estimate genetic correlation
+ldsc_fit <- ldsc(
+  traits = c(
+    "Cluster.sumstats.gz",
+    "Outcome.sumstats.gz"
+  ),
+  sample.prev = c(0.5, 0.5),
+  population.prev = c(Cluster = 0.20, Outcome = 0.04),
+  ld = ld_ref,
+  wld = ld_ref,
+  trait.names = trait_names
+)
+
+# Extract genetic correlation
+S <- ldsc_fit$S
+rg <- S[1, 2] / sqrt(S[1, 1] * S[2, 2])
+
+print(rg)
