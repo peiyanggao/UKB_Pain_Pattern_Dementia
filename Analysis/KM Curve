@@ -1,0 +1,17 @@
+# Kaplan-Meier survival curve
+library(survival)
+library(survminer)
+
+fit <- survfit(
+  Surv(Outcome_years, Outcome_status == 1) ~ Cluster,
+  data = Analysis_COX_Exposure_Outcome
+)
+
+ggsurvplot(
+  fit,
+  data = Analysis_COX_Exposure_Outcome,
+  xlab = "Years",
+  ylab = "Survival probability",
+  pval = TRUE,
+  risk.table = TRUE
+)
