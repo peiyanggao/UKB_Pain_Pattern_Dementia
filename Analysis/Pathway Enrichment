@@ -1,0 +1,50 @@
+# GO and KEGG enrichment analysis
+library(clusterProfiler)
+library(org.Hs.eg.db)
+library(dplyr)
+
+protein <- subset(
+  RESULT_GLM_Pain_Cluster_Proteomics,
+  P.adj.bonf < 0.05
+)$Exposure
+
+protein_entrez <- bitr(
+  protein,
+  fromType = "SYMBOL",
+  toType = "ENTREZID",
+  OrgDb = org.Hs.eg.db
+)
+
+enrich_go <- enrichGO(
+  gene = protein_entrez$ENTREZID,
+  OrgDb = org.Hs.eg.db,
+  keyType = "ENTREZID",
+  ont = "ALL",
+  pAdjustMethod = "fdr",
+  pvalueCutoff = 0.05,
+  qvalueCutoff = 0.2
+)
+
+enrich_kegg <- enrichKEGG(
+  gene = protein_entrez$ENTREZID,
+  organism = "hsa",
+  keyType = "ncbi-geneid",
+  pAdjustMethod = "fdr",
+  pvalueCutoff = 0.05,
+  qvalueCutoff = 0.2
+)
+
+# Combine GO and KEGG results
+enrich_go <- as.data.frame(enrich_go)
+enrich_kegg <- as.data.frame(enrich_kegg)
+enrich_kegg$ONTOLOGY <- "KEGG"
+
+enrichment_results <- bind_rows(
+  enrich_go,
+  enrich_kegg
+)
+
+enrichment_results <- enrichment_results %>%
+  arrange(ONTOLOGY, p.adjust)
+
+print(enrichment_results)
