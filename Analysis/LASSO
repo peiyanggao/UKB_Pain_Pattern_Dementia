@@ -1,0 +1,29 @@
+# LASSO logistic regression
+library(glmnet)
+
+x <- as.matrix(mydata[, protein_vars])
+y <- mydata$Cluster
+
+set.seed(9)
+cvfit <- cv.glmnet(
+  x = x,
+  y = y,
+  family = "binomial",
+  alpha = 1,
+  nfolds = 10
+)
+lasso_fit <- glmnet(
+  x = x,
+  y = y,
+  family = "binomial",
+  alpha = 1,
+  lambda = cvfit$lambda.min
+)
+selected_features <- coef(lasso_fit)
+selected_features <- selected_features[selected_features[, 1] != 0, ]
+lasso_score <- predict(
+  lasso_fit,
+  newx = x,
+  s = cvfit$lambda.min,
+  type = "link"
+)
