@@ -1,0 +1,24 @@
+# Mediation analysis
+library(mediation)
+
+
+mediator_model <- lm(
+  Protein ~ Cluster +Age+Sex+Smoking+Alcohol+College+TDI+Ethnic+BMI,
+  data = mydata
+)
+
+
+outcome_model <- glm(
+  Dementia_status ~ Cluster + Protein +Age+Sex+Smoking+Alcohol+College+TDI+Ethnic+BMI,
+  data = mydata
+)
+
+med_fit <- mediate(
+  mediator_model,
+  outcome_model,
+  treat = "Cluster",
+  mediator = "Protein",
+  sims = 5000
+)
+
+summary(med_fit)
