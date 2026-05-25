@@ -1,0 +1,10 @@
+# Linear regression model
+mydata <- Analysis_LM_Exposure_Outcome
+
+# Cognition & Mental health
+fit <- lm(Outcome ~ Cluster +Age+Sex+Smoking+Alcohol+College+TDI+Ethnic+BMI+Sleep.Duration+Diet_Quality+Physical.Activity.Status+Family.Dementia.History+History_Diabetes+History_Hypertension+History_High.Cholesterol+APOE4, data=mydata)
+summary(fit)
+
+# Brain MRI index
+fit <- lm(Outcome ~ Cluster +Age+Sex+Smoking+Alcohol+College+TDI+Ethnic+BMI+ICV+Imaging_period, data=mydata)
+summary(fit)
