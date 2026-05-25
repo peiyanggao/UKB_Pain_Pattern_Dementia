@@ -2,8 +2,8 @@ library(survival)
 mydata <- Analysis_Cox_Exposure_Outcome
 
 # PH test
-res.cox <- coxph(Surv(Outcome_period,Outcome_status==1) ~ Exposure +Age+Sex+Smoking+Alcohol+College+TDI+Ethnic+BMI+Sleep.Duration+Diet_Quality+Physical.Activity.Status+Family.Dementia.History+History_Diabetes+History_Hypertension+History_High.Cholesterol+APOE4', data = mydata)
+res.cox <- coxph(Surv(Outcome_period,Outcome_status==1) ~ Cluster +Age+Sex+Smoking+Alcohol+College+TDI+Ethnic+BMI+Sleep.Duration+Diet_Quality+Physical.Activity.Status+Family.Dementia.History+History_Diabetes+History_Hypertension+History_High.Cholesterol+APOE4', data = mydata)
 cox.zph(res.cox)
 # Cox proportional hazard model
-fit <- coxph(Surv(Outcome_period,Outcome_status==1) ~ Exposure +Age+Sex+Smoking+Alcohol+College+TDI+Ethnic+BMI+Sleep.Duration+Diet_Quality+Physical.Activity.Status+Family.Dementia.History+History_Diabetes+History_Hypertension+History_High.Cholesterol+APOE4, data = mydata)
+fit <- coxph(Surv(Outcome_period,Outcome_status==1) ~ Cluster +Age+Sex+Smoking+Alcohol+College+TDI+Ethnic+BMI+Sleep.Duration+Diet_Quality+Physical.Activity.Status+Family.Dementia.History+History_Diabetes+History_Hypertension+History_High.Cholesterol+APOE4, data = mydata)
 summary(fit)
