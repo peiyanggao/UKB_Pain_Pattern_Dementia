@@ -1,0 +1,3 @@
+# Proteomics
+fit <- glm(Cluster ~ Proteins +Age+Sex+Smoking+Alcohol+College+TDI+Ethnic+BMI+Sample_fasted_period+Sample_age+Sample_season, data=mydata)
+summary(fit)
