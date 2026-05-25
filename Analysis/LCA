@@ -1,1 +1,56 @@
+library(poLCA)
 
+set.seed(9)
+
+lca_vars <- c(
+  "Headache_status",
+  "Facial_status",
+  "Neck.Shoulder_status",
+  "Back_status",
+  "Stomach.abdominal_status",
+  "Hip_status",
+  "Knee_status")
+
+mydata <- DATA_Pain_Pattern[, lca_vars]
+mydata[lca_vars] <- lapply(mydata[lca_vars], as.factor)
+
+f <- cbind(
+  Headache_status,
+  Facial_status,
+  Neck.Shoulder_status,
+  Back_status,
+  Stomach.abdominal_status,
+  Hip_status,
+  Knee_status) ~ 1
+
+lca_results <- list()
+
+fit_stats <- data.frame()
+
+for (k in 2:15) {
+  model_k <- poLCA(
+    f,
+    data = mydata,
+    nclass = k,
+    maxiter = 3000,
+    tol = 1e-8,
+    verbose = FALSE,
+    graphs = FALSE)
+
+  lca_results[[paste0("class_", k)]] <- model_k
+
+  fit_stats <- rbind(
+    fit_stats,
+    data.frame(
+      n_class = k,
+      log_likelihood = model_k$llik,
+      AIC = model_k$aic,
+      BIC = model_k$bic
+    )
+  )
+}
+
+print(fit_stats)
+
+best_model <- lca_models[[7]]
+mydata$LCA_class <- apply(best_model$posterior, 1, which.max)
