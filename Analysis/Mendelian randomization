@@ -1,0 +1,16 @@
+# Mendelian randomization analysis
+library(TwoSampleMR)
+
+exposure_data <- read_exposure_data("gwas_exposure.txt")
+exposure_data <- subset(exposure_data, pval.exposure < 1e-6)
+exposure_data <- clump_data(exposure_data)
+
+outcome_data <- read_outcome_data(
+  snps = exposure_data$SNP,
+  filename = "gwas_outcome.txt.gz"
+)
+
+mr_data <- harmonise_data(exposure_data, outcome_data)
+mr_results <- mr(mr_data)
+
+print(mr_results)
