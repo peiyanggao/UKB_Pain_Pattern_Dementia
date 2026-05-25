@@ -1,0 +1,19 @@
+# GWAS
+
+plink2 \
+  --bgen ukb_chr${CHR}.bgen ref-first \
+  --sample ukb_chr${CHR}.sample \
+  --keep phenotype_file.tsv \
+  --pheno phenotype_file.tsv \
+  --pheno-name Cluster \
+  --1 \
+  --covar phenotype_file.tsv \
+  --covar-name Sex TDI Batch_Genetic PC1 PC2 PC3 PC4 PC5 PC6 PC7 PC8 PC9 PC10 \
+  --covar-variance-standardize TDI PC1 PC2 PC3 PC4 PC5 PC6 PC7 PC8 PC9 PC10 \
+  --glm hide-covar firth-fallback cols=chrom,pos,ref,alt,a1freq,nobs,orbeta,se,ci,tz,p \
+  --maf 0.01 \
+  --geno 0.1 \
+  --hwe 1e-6 \
+  --mind 0.1 \
+  --threads 8 \
+  --out gwas_cluster_chr${CHR}
